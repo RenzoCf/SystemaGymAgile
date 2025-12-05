@@ -103,6 +103,23 @@ const RegisterBtn = styled.button`
   &:hover { background: #444; }
 `;
 
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  
+  h3 {
+    font-size: 1.5rem;
+    color: #666;
+    margin-bottom: 12px;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #999;
+  }
+`;
+
 // ======================
 // Componente principal
 // ======================
@@ -110,12 +127,20 @@ export default function Plans() {
   const [plans, setPlans] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/plans`)
+    // ⭐ CAMBIO: Usar /api/plans/landing en lugar de /api/plans
+    fetch(`${API_URL}/api/plans/landing`)
       .then((res) => res.json())
-      .then((data) => setPlans(data))
-      .catch((err) => console.error("Error al traer planes:", err));
+      .then((data) => {
+        setPlans(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error al traer planes:", err);
+        setLoading(false);
+      });
   }, []);
 
   const handleEnroll = () => setShowModal(true);
@@ -145,27 +170,44 @@ export default function Plans() {
     window.location.href = "/register";
   };
 
+  if (loading) {
+    return (
+      <Page>
+        <Title>Planes de Membresía</Title>
+        <p>Cargando planes...</p>
+      </Page>
+    );
+  }
+
   return (
     <Page>
       <Title>Planes de Membresía</Title>
-      <Grid>
-        {plans.map((plan) => (
-          <Card key={plan.id} highlight={plan.highlight}>
-            <div>
-              <div className="label">{plan.label || "Plan"}</div>
-              {plan.name.includes("Básico") ? <FaDumbbell /> : plan.name.includes("Intermedio") ? <FaRunning /> : <FaUserShield />}
-              <h3>{plan.name}</h3>
-              <div className="desc">{plan.desc}</div>
-              <div className="focus">{plan.focus || ""}</div>
-              <div className="duration">{plan.duration || ""}</div>
-              <div className="price">{plan.price}</div>
-              <ul>{plan.specs?.map((spec, i) => <li key={i}>{spec}</li>)}</ul>
-              <div className="bonus">{plan.bonus || ""}</div>
-            </div>
-            <button onClick={() => handleEnroll(plan.id)}>Elegir Plan</button>
-          </Card>
-        ))}
-      </Grid>
+      
+      {plans.length === 0 ? (
+        <EmptyState>
+          <h3>📋 No hay planes disponibles</h3>
+          <p>Actualmente no hay planes configurados para mostrar. Por favor, contacta con el gimnasio.</p>
+        </EmptyState>
+      ) : (
+        <Grid>
+          {plans.map((plan) => (
+            <Card key={plan.id} highlight={plan.highlight}>
+              <div>
+                <div className="label">{plan.label || "Plan"}</div>
+                {plan.name.includes("Básico") ? <FaDumbbell /> : plan.name.includes("Intermedio") ? <FaRunning /> : <FaUserShield />}
+                <h3>{plan.name}</h3>
+                <div className="desc">{plan.desc}</div>
+                <div className="focus">{plan.focus || ""}</div>
+                <div className="duration">{plan.duration || ""}</div>
+                <div className="price">S/ {plan.price}</div>
+                <ul>{plan.specs?.map((spec, i) => <li key={i}>{spec}</li>)}</ul>
+                {plan.bonus && <div className="bonus">{plan.bonus}</div>}
+              </div>
+              <button onClick={() => handleEnroll(plan.id)}>Elegir Plan</button>
+            </Card>
+          ))}
+        </Grid>
+      )}
 
       {showModal && (
         <ModalOverlay>
