@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-
+import { API_URL } from "../config"; // Ajusta la ruta (../) según donde esté el archivo
 // ======================
 // ÍCONOS SVG LOCALES
 // ======================
