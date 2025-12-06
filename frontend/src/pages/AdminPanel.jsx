@@ -1,15 +1,15 @@
-// src/pages/AdminPanel.jsx - VERSIÓN VISUAL MEJORADA
 import React, { useEffect, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import EditPlanModal from "../components/EditPlanModal";
 import { useNavigate } from "react-router-dom";
 import { FaSearch, FaSort, FaSortUp, FaSortDown, FaExclamationTriangle, FaWhatsapp, FaExchangeAlt, FaTimes, FaUserFriends, FaDumbbell, FaMoneyBillWave, FaSignOutAlt } from "react-icons/fa";
+// 👇 ESTA ES LA CLAVE: Importamos la URL de la nube
+import { API_URL } from "../config";
 
 // ==========================================
-//  🎨 STYLED COMPONENTS (DISEÑO RENOVADO)
+//  🎨 STYLED COMPONENTS
 // ==========================================
 
-// Animaciones
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -19,8 +19,8 @@ const Container = styled.div`
   padding: 30px 5%;
   max-width: 1600px;
   margin: 0 auto;
-  font-family: 'Segoe UI', 'Roboto', sans-serif; /* Tipografía más moderna */
-  background: #f0f2f5; /* Gris azulado muy suave, típico de dashboards modernos */
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background: #f0f2f5;
   min-height: 100vh;
   color: #1a1a1a;
 `;
@@ -34,7 +34,7 @@ const Navbar = styled.nav`
   border-radius: 16px;
   margin-bottom: 35px;
   align-items: center;
-  box-shadow: 0 10px 25px rgba(35, 35, 74, 0.2); /* Sombra elegante */
+  box-shadow: 0 10px 25px rgba(35, 35, 74, 0.2);
 `;
 
 const NavItem = styled.div`
@@ -73,7 +73,7 @@ const AlertBadge = styled.span`
   font-size: 0.7rem;
   font-weight: bold;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  border: 2px solid #23234a; /* Borde para separarlo del fondo */
+  border: 2px solid #23234a;
 `;
 
 const Title = styled.h2`
@@ -85,12 +85,11 @@ const Title = styled.h2`
   animation: ${fadeIn} 0.5s ease;
 `;
 
-// Contenedor tipo "Card" para las secciones
 const SectionContainer = styled.div`
   background: #fff;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05); /* Sombra muy suave */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
   margin-bottom: 30px;
   border: 1px solid rgba(0,0,0,0.03);
   animation: ${fadeIn} 0.5s ease;
@@ -140,7 +139,6 @@ const FilterSelect = styled.select`
   }
 `;
 
-// Tabla Rediseñada
 const Table = styled.table`
   width: 100%;
   border-collapse: separate; 
@@ -178,7 +176,6 @@ const Td = styled.td`
   background: white;
   transition: background 0.2s;
 
-  /* Efecto hover en la fila completa */
   ${Table} tr:hover & {
     background: #fafafa;
   }
@@ -202,7 +199,7 @@ const StatusBadge = styled.span`
         return css`background: #fff5f5; color: #fa5252; border: 1px solid #fa525233;`;
       case "Por vencer":
         return css`background: #fff9db; color: #f59f00; border: 1px solid #f59f0033;`;
-      default: // Sin membresía
+      default: 
         return css`background: #f1f3f5; color: #868e96; border: 1px solid #ced4da;`;
     }
   }}
@@ -223,7 +220,7 @@ const Button = styled.button`
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Sombra suave en botones */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   
   &:hover { 
     filter: brightness(1.1);
@@ -240,7 +237,6 @@ const Button = styled.button`
   }
 `;
 
-// Inputs mejorados
 const Select = styled.select`
   padding: 10px 12px;
   border-radius: 8px;
@@ -311,15 +307,14 @@ const ErrorMsg = styled.div`
   gap: 10px;
 `;
 
-// Modal más limpio
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(35, 35, 74, 0.7); /* Azul oscuro translúcido */
-  backdrop-filter: blur(4px); /* Efecto de desenfoque */
+  background: rgba(35, 35, 74, 0.7);
+  backdrop-filter: blur(4px);
   display: ${(props) => (props.$show ? "flex" : "none")};
   justify-content: center;
   align-items: center;
@@ -346,7 +341,6 @@ const ModalContent = styled.div`
   }
 `;
 
-// Estadísticas con Grid y mejor diseño
 const StatsBar = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -355,7 +349,7 @@ const StatsBar = styled.div`
 `;
 
 const StatCard = styled.div`
-  background: white; /* Tarjetas blancas más limpias */
+  background: white;
   color: #333;
   padding: 25px;
   border-radius: 16px;
@@ -363,7 +357,7 @@ const StatCard = styled.div`
   position: relative;
   overflow: hidden;
   transition: transform 0.3s;
-  border-bottom: 4px solid ${props => props.$color1}; /* Línea de color abajo */
+  border-bottom: 4px solid ${props => props.$color1};
 
   &:hover {
     transform: translateY(-5px);
@@ -386,7 +380,6 @@ const StatCard = styled.div`
     font-weight: 600;
   }
 
-  /* Icono decorativo de fondo */
   .icon-bg {
     position: absolute;
     top: -10px;
@@ -482,7 +475,7 @@ const PlanChangeInfo = styled.div`
 `;
 
 // ==========================================
-//  LÓGICA DEL COMPONENTE (SIN CAMBIOS)
+//  LÓGICA DEL COMPONENTE
 // ==========================================
 
 export default function AdminPanel() {
@@ -521,16 +514,17 @@ export default function AdminPanel() {
     notes: ""
   });
 
+  // --- CARGAR DATOS (CONEXIÓN A LA NUBE) ---
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/users");
+      const res = await fetch(`${API_URL}/api/admin/users`);
       if (!res.ok) throw new Error("Error al cargar usuarios");
       const data = await res.json();
 
       const usersWithStatus = await Promise.all(
         data.map(async u => {
           try {
-            const resp = await fetch(`http://localhost:5000/api/user/${u.id}/membership`);
+            const resp = await fetch(`${API_URL}/api/user/${u.id}/membership`);
             const membership = await resp.json();
             return {
               ...u,
@@ -542,7 +536,6 @@ export default function AdminPanel() {
           }
         })
       );
-
       setUsers(usersWithStatus);
     } catch (err) {
       console.error(err);
@@ -551,7 +544,7 @@ export default function AdminPanel() {
 
   const fetchPlans = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/plans");
+      const res = await fetch(`${API_URL}/api/admin/plans`);
       if (!res.ok) throw new Error("Error al cargar planes");
       const data = await res.json();
       setPlans(data);
@@ -560,7 +553,7 @@ export default function AdminPanel() {
 
   const fetchPayments = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/payments");
+      const res = await fetch(`${API_URL}/api/admin/payments`);
       if (!res.ok) throw new Error("Error al cargar pagos");
       const data = await res.json();
       setPayments(data);
@@ -572,7 +565,7 @@ export default function AdminPanel() {
 
   const fetchPaymentHistory = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/payment-history");
+      const res = await fetch(`${API_URL}/api/admin/payment-history`);
       if (!res.ok) throw new Error("Error al cargar historial");
       const data = await res.json();
       setPaymentHistory(data);
@@ -588,6 +581,8 @@ export default function AdminPanel() {
     fetchPayments();
     fetchPaymentHistory();
   }, []);
+
+  // --- ACCIONES (CONEXIÓN A LA NUBE) ---
 
   const handleCreatePlan = async (e) => {
     e.preventDefault();
@@ -624,7 +619,7 @@ export default function AdminPanel() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/plans", {
+      const res = await fetch(`${API_URL}/api/admin/plans`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -656,17 +651,13 @@ export default function AdminPanel() {
   };
 
   const handleDeletePlan = async (plan) => {
-    if (!window.confirm(`¿Eliminar el plan "${plan.name}"? Esta acción no se puede deshacer.`)) {
-      return;
-    }
+    if (!window.confirm(`¿Eliminar el plan "${plan.name}"? Esta acción no se puede deshacer.`)) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/plans/${plan.id}`, {
+      const res = await fetch(`${API_URL}/api/admin/plans/${plan.id}`, {
         method: "DELETE"
       });
-
       if (!res.ok) throw new Error("Error al eliminar plan");
-
       alert("Plan eliminado correctamente");
       await fetchPlans();
     } catch (err) {
@@ -683,14 +674,12 @@ export default function AdminPanel() {
         return;
       }
     }
-
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/plans/${plan.id}`, {
+      const res = await fetch(`${API_URL}/api/admin/plans/${plan.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...plan, show_in_landing: !plan.show_in_landing })
       });
-
       if (!res.ok) throw new Error("Error al actualizar plan");
       await fetchPlans();
     } catch (err) {
@@ -699,29 +688,141 @@ export default function AdminPanel() {
     }
   };
 
+  const handleSchedulePlanChange = async (userId) => {
+    const nextPlanId = userPlanSelection[userId];
+    if (!nextPlanId) {
+      alert("Selecciona un plan");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_URL}/api/admin/schedule-plan-change`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, next_plan_id: nextPlanId })
+      });
+      if (!res.ok) throw new Error("Error al programar cambio");
+      alert("Cambio programado. Se aplicará en el próximo pago.");
+      fetchUsers();
+      setUserPlanSelection({ ...userPlanSelection, [userId]: "" });
+    } catch (err) {
+      console.error(err);
+      alert("Error al programar cambio");
+    }
+  };
+
+  const handleCancelPlanChange = async (userId) => {
+    if (!window.confirm("¿Cancelar el cambio de plan programado?")) return;
+    try {
+      const res = await fetch(`${API_URL}/api/admin/cancel-plan-change`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId })
+      });
+      if (!res.ok) throw new Error("Error al cancelar cambio");
+      alert("Cambio cancelado");
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      alert("Error al cancelar cambio");
+    }
+  };
+
+  const handleAssignPlan = async (userId) => {
+    const planId = userPlanSelection[userId];
+    if (!planId) {
+      alert("Selecciona un plan");
+      return;
+    }
+    try {
+      const res = await fetch(`${API_URL}/api/enroll`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId, plan_id: planId })
+      });
+      if (!res.ok) throw new Error("Error al asignar plan");
+      alert("Membresía activada correctamente");
+      fetchUsers();
+      fetchPayments();
+      fetchPaymentHistory();
+      setUserPlanSelection({ ...userPlanSelection, [userId]: "" });
+    } catch (err) {
+      console.error(err);
+      alert("Error al activar membresía");
+    }
+  };
+
+  const handleDeactivate = async (userId) => {
+    if (!window.confirm("¿Deseas desactivar esta membresía?")) return;
+    try {
+      const res = await fetch(`${API_URL}/api/admin/deactivate-membership`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId })
+      });
+      if (!res.ok) throw new Error("Error al desactivar");
+      alert("Membresía desactivada");
+      fetchUsers();
+      fetchPayments();
+    } catch (err) {
+      console.error(err);
+      alert("Error al desactivar");
+    }
+  };
+
+  const handleRegisterPayment = (payment) => {
+    setSelectedPayment(payment);
+    setPaymentFormData({
+      amount: payment.plan_price || "",
+      payment_method: "Efectivo",
+      notes: ""
+    });
+    setShowPaymentModal(true);
+  };
+
+  const submitPayment = async () => {
+    if (!selectedPayment) return;
+    try {
+      const res = await fetch(`${API_URL}/api/admin/register-payment`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: selectedPayment.user_id,
+          amount: parseFloat(paymentFormData.amount),
+          payment_method: paymentFormData.payment_method,
+          notes: paymentFormData.notes
+        })
+      });
+      if (!res.ok) throw new Error("Error al registrar pago");
+      
+      alert("Pago registrado correctamente");
+      setShowPaymentModal(false);
+      setSelectedPayment(null);
+      fetchUsers();
+      fetchPayments();
+      fetchPaymentHistory();
+    } catch (err) {
+      console.error(err);
+      alert("Error al registrar pago");
+    }
+  };
+
+  // --- FILTROS Y ORDEN ---
   const filteredUsers = users.filter(user => {
     const matchesSearch =
       user.nombre_completo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.username?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesFilter =
-      filterStatus === "Todos" ||
-      user.membershipStatus === filterStatus;
-
+    const matchesFilter = filterStatus === "Todos" || user.membershipStatus === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (!sortConfig.key) return 0;
-
     let aValue = a[sortConfig.key];
     let bValue = b[sortConfig.key];
-
     if (sortConfig.key === "planName") {
       aValue = a.membership?.name || "";
       bValue = b.membership?.name || "";
     }
-
     if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
     if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
     return 0;
@@ -745,150 +846,10 @@ export default function AdminPanel() {
     vencidos: users.filter(u => u.membershipStatus === "Vencida").length,
     sinMembresia: users.filter(u => u.membershipStatus === "Sin membresía").length
   };
-
   const paymentsOverdue = payments.filter(p => p.payment_status === "Vencido").length;
 
-  const handleSchedulePlanChange = async (userId) => {
-    const nextPlanId = userPlanSelection[userId];
-    if (!nextPlanId) {
-      alert("Selecciona un plan");
-      return;
-    }
-
-    const user = users.find(u => u.id === userId);
-    const currentPlanId = user?.membership?.id;
-
-    if (nextPlanId === currentPlanId) {
-      alert("El plan seleccionado es el mismo que el actual");
-      return;
-    }
-
-    try {
-      const res = await fetch("http://localhost:5000/api/admin/schedule-plan-change", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, next_plan_id: nextPlanId })
-      });
-      if (!res.ok) throw new Error("Error al programar cambio de plan");
-      alert("Cambio de plan programado. Se aplicará en el próximo pago.");
-      fetchUsers();
-      fetchPayments();
-      setUserPlanSelection({ ...userPlanSelection, [userId]: "" });
-    } catch (err) {
-      console.error(err);
-      alert("Error al programar cambio de plan");
-    }
-  };
-
-  const handleCancelPlanChange = async (userId) => {
-    if (!window.confirm("¿Cancelar el cambio de plan programado?")) return;
-
-    try {
-      const res = await fetch("http://localhost:5000/api/admin/cancel-plan-change", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId })
-      });
-      if (!res.ok) throw new Error("Error al cancelar cambio de plan");
-      alert("Cambio de plan cancelado");
-      fetchUsers();
-      fetchPayments();
-    } catch (err) {
-      console.error(err);
-      alert("Error al cancelar cambio de plan");
-    }
-  };
-
-  const handleAssignPlan = async (userId) => {
-    const planId = userPlanSelection[userId];
-    if (!planId) {
-      alert("Selecciona un plan");
-      return;
-    }
-
-    try {
-      const res = await fetch("http://localhost:5000/api/enroll", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, plan_id: planId })
-      });
-      if (!res.ok) throw new Error("Error al asignar plan");
-      alert("Membresía activada correctamente");
-      fetchUsers();
-      fetchPayments();
-      fetchPaymentHistory();
-      setUserPlanSelection({ ...userPlanSelection, [userId]: "" });
-    } catch (err) {
-      console.error(err);
-      alert("Error al activar membresía");
-    }
-  };
-
-  const handleDeactivate = async (userId) => {
-    if (!window.confirm("¿Deseas desactivar esta membresía?")) return;
-
-    try {
-      const res = await fetch("http://localhost:5000/api/admin/deactivate-membership", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId })
-      });
-      if (!res.ok) throw new Error("Error al desactivar membresía");
-      alert("Membresía desactivada correctamente");
-      fetchUsers();
-      fetchPayments();
-    } catch (err) {
-      console.error(err);
-      alert("Error al desactivar membresía");
-    }
-  };
-
-  const handleRegisterPayment = (payment) => {
-    setSelectedPayment(payment);
-    setPaymentFormData({
-      amount: payment.plan_price || "",
-      payment_method: "Efectivo",
-      notes: ""
-    });
-    setShowPaymentModal(true);
-  };
-
-  const submitPayment = async () => {
-    if (!selectedPayment) return;
-
-    try {
-      const res = await fetch("http://localhost:5000/api/admin/register-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: selectedPayment.user_id,
-          amount: parseFloat(paymentFormData.amount),
-          payment_method: paymentFormData.payment_method,
-          notes: paymentFormData.notes
-        })
-      });
-      if (!res.ok) throw new Error("Error al registrar pago");
-      const result = await res.json();
-      
-      if (result.plan_changed) {
-        alert("Pago registrado y cambio de plan aplicado correctamente!");
-      } else {
-        alert("Pago registrado correctamente");
-      }
-      
-      setShowPaymentModal(false);
-      setSelectedPayment(null);
-      fetchUsers();
-      fetchPayments();
-      fetchPaymentHistory();
-    } catch (err) {
-      console.error(err);
-      alert("Error al registrar pago");
-    }
-  };
-
   const sendWhatsAppReminder = (payment) => {
-    const message = `Hola ${payment.user_name}, te recordamos que tu pago del plan ${payment.plan_name} está ${payment.payment_status === "Vencido" ? "vencido" : "por vencer"}. Por favor, realiza tu pago lo antes posible.`;
+    const message = `Hola ${payment.user_name}, recordatorio: tu pago del plan ${payment.plan_name} está ${payment.payment_status}.`;
     window.open(`https://wa.me/51900000000?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -903,69 +864,34 @@ export default function AdminPanel() {
       <Navbar>
         <div style={{ display: "flex", alignItems: "center" }}>
           {["Usuarios", "Planes", "Pagos"].map(sec => (
-            <NavItem
-              key={sec}
-              $active={activeSection === sec}
-              onClick={() => setActiveSection(sec)}
-            >
-              {sec}
-              {sec === "Pagos" && paymentsOverdue > 0 && (
-                <AlertBadge>{paymentsOverdue}</AlertBadge>
-              )}
+            <NavItem key={sec} $active={activeSection === sec} onClick={() => setActiveSection(sec)}>
+              {sec} {sec === "Pagos" && paymentsOverdue > 0 && <AlertBadge>{paymentsOverdue}</AlertBadge>}
             </NavItem>
           ))}
         </div>
-        <Button 
-          onClick={() => setShowLogout(true)} 
-          $bg="rgba(255,255,255,0.1)"
-          style={{ border: "1px solid rgba(255,255,255,0.2)" }}
-        >
+        <Button onClick={() => setShowLogout(true)} $bg="rgba(255,255,255,0.1)" style={{ border: "1px solid rgba(255,255,255,0.2)" }}>
           <FaSignOutAlt /> Salir
         </Button>
       </Navbar>
 
       <Title>{activeSection}</Title>
 
-      {/* Sección Usuarios */}
+      {/* SECCIÓN USUARIOS */}
       {activeSection === "Usuarios" && (
         <>
           <StatsBar>
-            <StatCard $color1="#20c997">
-              <FaUserFriends className="icon-bg"/>
-              <p>Membresías Activas</p>
-              <h3>{stats.activos}</h3>
-            </StatCard>
-            <StatCard $color1="#ff6b6b">
-              <FaExclamationTriangle className="icon-bg"/>
-              <p>Vencidos</p>
-              <h3>{stats.vencidos}</h3>
-            </StatCard>
-            <StatCard $color1="#adb5bd">
-              <FaUserFriends className="icon-bg"/>
-              <p>Inactivos</p>
-              <h3>{stats.sinMembresia}</h3>
-            </StatCard>
-            <StatCard $color1="#339af0">
-              <FaDumbbell className="icon-bg"/>
-              <p>Total Usuarios</p>
-              <h3>{stats.total}</h3>
-            </StatCard>
+            <StatCard $color1="#20c997"><FaUserFriends className="icon-bg"/><p>Activos</p><h3>{stats.activos}</h3></StatCard>
+            <StatCard $color1="#ff6b6b"><FaExclamationTriangle className="icon-bg"/><p>Vencidos</p><h3>{stats.vencidos}</h3></StatCard>
+            <StatCard $color1="#adb5bd"><FaUserFriends className="icon-bg"/><p>Inactivos</p><h3>{stats.sinMembresia}</h3></StatCard>
+            <StatCard $color1="#339af0"><FaDumbbell className="icon-bg"/><p>Total</p><h3>{stats.total}</h3></StatCard>
           </StatsBar>
 
           <SectionContainer>
             <SearchBar>
-              <FaSearch style={{ color: "#adb5bd", fontSize: "1.1rem" }} />
-              <SearchInput
-                type="text"
-                placeholder="Buscar por nombre o usuario..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <FilterSelect
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-              >
-                <option value="Todos">Todos los estados</option>
+              <FaSearch style={{ color: "#adb5bd" }} />
+              <SearchInput type="text" placeholder="Buscar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <FilterSelect value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                <option value="Todos">Todos</option>
                 <option value="Activa">Activa</option>
                 <option value="Vencida">Vencida</option>
                 <option value="Sin membresía">Sin membresía</option>
@@ -977,22 +903,12 @@ export default function AdminPanel() {
                 <Table>
                   <thead>
                     <tr>
-                      <Th $sortable onClick={() => handleSort("id")}>
-                        ID {getSortIcon("id")}
-                      </Th>
-                      <Th $sortable onClick={() => handleSort("nombre_completo")}>
-                        Nombre {getSortIcon("nombre_completo")}
-                      </Th>
-                      <Th $sortable onClick={() => handleSort("username")}>
-                        Usuario {getSortIcon("username")}
-                      </Th>
-                      <Th $sortable onClick={() => handleSort("planName")}>
-                        Plan Actual {getSortIcon("planName")}
-                      </Th>
-                      <Th $sortable onClick={() => handleSort("membershipStatus")}>
-                        Estado {getSortIcon("membershipStatus")}
-                      </Th>
-                      <Th>Gestión de Plan</Th>
+                      <Th $sortable onClick={() => handleSort("id")}>ID {getSortIcon("id")}</Th>
+                      <Th $sortable onClick={() => handleSort("nombre_completo")}>Nombre {getSortIcon("nombre_completo")}</Th>
+                      <Th $sortable onClick={() => handleSort("username")}>Usuario {getSortIcon("username")}</Th>
+                      <Th $sortable onClick={() => handleSort("planName")}>Plan {getSortIcon("planName")}</Th>
+                      <Th $sortable onClick={() => handleSort("membershipStatus")}>Estado {getSortIcon("membershipStatus")}</Th>
+                      <Th>Gestión</Th>
                       <Th>Acción</Th>
                     </tr>
                   </thead>
@@ -1000,512 +916,174 @@ export default function AdminPanel() {
                     {sortedUsers.map(u => (
                       <tr key={u.id}>
                         <Td>#{u.id}</Td>
-                        <Td>
-                          <div style={{ fontWeight: "600" }}>{u.nombre_completo}</div>
-                        </Td>
-                        <Td style={{ color: "#868e96" }}>@{u.username}</Td>
-                        <Td>
-                          <div style={{ fontWeight: "500" }}>{u.membership?.name || "—"}</div>
-                          {u.membership?.next_plan && (
-                            <PlanChangeInfo>
-                              <FaExchangeAlt size={10} />
-                              {u.membership.next_plan.name}
-                            </PlanChangeInfo>
-                          )}
-                        </Td>
-                        <Td>
-                          <StatusBadge $status={u.membershipStatus}>
-                            {u.membershipStatus}
-                          </StatusBadge>
-                        </Td>
+                        <Td><strong>{u.nombre_completo}</strong></Td>
+                        <Td>@{u.username}</Td>
+                        <Td>{u.membership?.name || "—"} {u.membership?.next_plan && <PlanChangeInfo><FaExchangeAlt size={10}/> {u.membership.next_plan.name}</PlanChangeInfo>}</Td>
+                        <Td><StatusBadge $status={u.membershipStatus}>{u.membershipStatus}</StatusBadge></Td>
                         <Td>
                           {u.membershipStatus === "Activa" ? (
-                            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                              <Select
-                                value={userPlanSelection[u.id] || ""}
-                                onChange={(e) =>
-                                  setUserPlanSelection({
-                                    ...userPlanSelection,
-                                    [u.id]: Number(e.target.value)
-                                  })
-                                }
-                                style={{ width: "160px" }}
-                              >
+                            <div style={{ display: "flex", gap: "8px" }}>
+                              <Select value={userPlanSelection[u.id] || ""} onChange={(e) => setUserPlanSelection({ ...userPlanSelection, [u.id]: Number(e.target.value) })}>
                                 <option value="">Cambiar Plan...</option>
-                                {plans.map(p => (
-                                  <option key={p.id} value={p.id}>
-                                    {p.name}
-                                  </option>
-                                ))}
+                                {plans.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                               </Select>
-                              {userPlanSelection[u.id] && (
-                                <Button 
-                                  $bg="#fcc419" 
-                                  onClick={() => handleSchedulePlanChange(u.id)}
-                                  title="Programar cambio"
-                                  style={{ padding: "8px 10px" }}
-                                >
-                                  <FaExchangeAlt />
-                                </Button>
-                              )}
-                              {u.membership?.next_plan && (
-                                <Button 
-                                  $bg="#adb5bd" 
-                                  onClick={() => handleCancelPlanChange(u.id)}
-                                  title="Cancelar cambio programado"
-                                  style={{ padding: "8px 10px" }}
-                                >
-                                  <FaTimes />
-                                </Button>
-                              )}
+                              {userPlanSelection[u.id] && <Button $bg="#fcc419" onClick={() => handleSchedulePlanChange(u.id)}><FaExchangeAlt /></Button>}
+                              {u.membership?.next_plan && <Button $bg="#adb5bd" onClick={() => handleCancelPlanChange(u.id)}><FaTimes /></Button>}
                             </div>
                           ) : (
-                            <Select
-                              value={userPlanSelection[u.id] || ""}
-                              onChange={(e) =>
-                                setUserPlanSelection({
-                                  ...userPlanSelection,
-                                  [u.id]: Number(e.target.value)
-                                })
-                              }
-                            >
+                            <Select value={userPlanSelection[u.id] || ""} onChange={(e) => setUserPlanSelection({ ...userPlanSelection, [u.id]: Number(e.target.value) })}>
                               <option value="">Selecciona plan...</option>
-                              {plans.map(p => (
-                                <option key={p.id} value={p.id}>
-                                  {p.name}
-                                </option>
-                              ))}
+                              {plans.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                             </Select>
                           )}
                         </Td>
                         <Td>
-                          {u.membershipStatus === "Activa" ? (
-                            <Button $bg="#ff6b6b" onClick={() => handleDeactivate(u.id)}>
-                              Desactivar
-                            </Button>
-                          ) : (
-                            <Button $bg="#20c997" onClick={() => handleAssignPlan(u.id)}>
-                              Activar
-                            </Button>
-                          )}
+                          {u.membershipStatus === "Activa" ? 
+                            <Button $bg="#ff6b6b" onClick={() => handleDeactivate(u.id)}>Desactivar</Button> : 
+                            <Button $bg="#20c997" onClick={() => handleAssignPlan(u.id)}>Activar</Button>
+                          }
                         </Td>
                       </tr>
                     ))}
                   </tbody>
                 </Table>
               </div>
-            ) : (
-              <EmptyState>
-                <FaSearch />
-                <p>No se encontraron usuarios con los filtros aplicados</p>
-              </EmptyState>
-            )}
+            ) : <EmptyState><p>No hay usuarios</p></EmptyState>}
           </SectionContainer>
         </>
       )}
 
-      {/* Sección Planes */}
+      {/* SECCIÓN PLANES */}
       {activeSection === "Planes" && (
         <>
           <SectionContainer>
-            <h3 style={{ marginBottom: "25px", color: "#23234a", fontSize: "1.5rem" }}>Crear Nuevo Plan</h3>
+            <h3>Crear Nuevo Plan</h3>
             <Form onSubmit={handleCreatePlan}>
               <div style={{ display: "flex", gap: "20px", width: "100%" }}>
-                <Input
-                  type="text"
-                  placeholder="Nombre del plan"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                />
-                <Input
-                  type="number"
-                  step="0.01"
-                  placeholder="Precio (S/)"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  required
-                  style={{ maxWidth: "150px" }}
-                />
-                 <Input
-                  type="text"
-                  placeholder="Duración (ej: 1 mes)"
-                  value={formData.duration}
-                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                  required
-                  style={{ maxWidth: "200px" }}
-                />
+                <Input type="text" placeholder="Nombre" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+                <Input type="number" step="0.01" placeholder="Precio" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} required />
+                <Input type="text" placeholder="Duración" value={formData.duration} onChange={(e) => setFormData({ ...formData, duration: e.target.value })} required />
               </div>
-              
               <div style={{ display: "flex", gap: "20px", width: "100%" }}>
-                <Input
-                  type="text"
-                  placeholder="Etiqueta (ej: Popular)"
-                  value={formData.label}
-                  onChange={(e) => setFormData({ ...formData, label: e.target.value })}
-                />
-                <Input
-                  type="text"
-                  placeholder="Bonus (ej: 🎁 2 meses gratis)"
-                  value={formData.bonus}
-                  onChange={(e) => setFormData({ ...formData, bonus: e.target.value })}
-                />
+                <Input type="text" placeholder="Etiqueta" value={formData.label} onChange={(e) => setFormData({ ...formData, label: e.target.value })} />
+                <Input type="text" placeholder="Bonus" value={formData.bonus} onChange={(e) => setFormData({ ...formData, bonus: e.target.value })} />
               </div>
-
-              <div style={{ display: "flex", gap: "20px", width: "100%" }}>
-                 <Input
-                  type="text"
-                  placeholder="Breve descripción del plan..."
-                  value={formData.desc}
-                  onChange={(e) => setFormData({ ...formData, desc: e.target.value })}
-                  style={{ flex: 1 }}
-                />
-              </div>
-
+              <Input type="text" placeholder="Descripción" value={formData.desc} onChange={(e) => setFormData({ ...formData, desc: e.target.value })} style={{width: "100%"}} />
               <div style={{ width: "100%", display: "flex", gap: "20px" }}>
-                <CheckboxLabel>
-                  <input
-                    type="checkbox"
-                    checked={formData.highlight}
-                    onChange={(e) => setFormData({ ...formData, highlight: e.target.checked })}
-                  />
-                  <span>Destacar visualmente</span>
-                </CheckboxLabel>
-                <CheckboxLabel>
-                  <input
-                    type="checkbox"
-                    checked={formData.show_in_landing}
-                    onChange={(e) => setFormData({ ...formData, show_in_landing: e.target.checked })}
-                  />
-                  <span>Mostrar en Landing Page (máx. 3)</span>
-                </CheckboxLabel>
+                <CheckboxLabel><input type="checkbox" checked={formData.highlight} onChange={(e) => setFormData({ ...formData, highlight: e.target.checked })} /> Destacar</CheckboxLabel>
+                <CheckboxLabel><input type="checkbox" checked={formData.show_in_landing} onChange={(e) => setFormData({ ...formData, show_in_landing: e.target.checked })} /> Mostrar en Landing</CheckboxLabel>
               </div>
-
-              <TextArea
-                placeholder="Características del plan (una por línea)&#10;Ej:&#10;Acceso ilimitado&#10;Toalla gratis"
-                value={formData.specs}
-                onChange={(e) => setFormData({ ...formData, specs: e.target.value })}
-                rows={4}
-              />
-              <Button type="submit" style={{ width: "100%", padding: "14px", fontSize: "1rem" }}>
-                Crear Plan
-              </Button>
+              <TextArea placeholder="Specs (una por línea)" value={formData.specs} onChange={(e) => setFormData({ ...formData, specs: e.target.value })} rows={4} />
+              <Button type="submit" style={{ width: "100%" }}>Crear Plan</Button>
             </Form>
             {error && <ErrorMsg><FaExclamationTriangle /> {error}</ErrorMsg>}
           </SectionContainer>
 
           <SectionContainer>
-            <h3 style={{ marginBottom: "20px", color: "#23234a" }}>
-              Planes Existentes <span style={{fontSize: "1rem", color: "#888", fontWeight: "normal"}}>({plans.length})</span>
-            </h3>
+            <h3>Planes Existentes</h3>
             {plans.length > 0 ? (
               <Table>
-                <thead>
-                  <tr>
-                    <Th>ID</Th>
-                    <Th>Nombre</Th>
-                    <Th>Precio</Th>
-                    <Th>Duración</Th>
-                    <Th>Etiqueta</Th>
-                    <Th>Destacado</Th>
-                    <Th>En Landing</Th>
-                    <Th>Acciones</Th>
-                  </tr>
-                </thead>
+                <thead><tr><Th>ID</Th><Th>Nombre</Th><Th>Precio</Th><Th>Duración</Th><Th>Landing</Th><Th>Acciones</Th></tr></thead>
                 <tbody>
                   {plans.map(plan => (
                     <tr key={plan.id}>
                       <Td>#{plan.id}</Td>
                       <Td><strong>{plan.name}</strong></Td>
-                      <Td style={{ color: "#e94560", fontWeight: "bold" }}>S/ {plan.price}</Td>
+                      <Td>S/ {plan.price}</Td>
                       <Td>{plan.duration}</Td>
+                      <Td><input type="checkbox" checked={plan.show_in_landing || false} onChange={() => handleToggleLanding(plan)} /></Td>
                       <Td>
-                        {plan.label ? <StatusBadge $status="Activa">{plan.label}</StatusBadge> : <span style={{color: "#ccc"}}>—</span>}
-                      </Td>
-                      <Td>{plan.highlight ? "⭐ Sí" : "No"}</Td>
-                      <Td>
-                        <CheckboxLabel style={{ justifyContent: "center", margin: 0, padding: "5px", background: "transparent", border: "none" }}>
-                          <input
-                            type="checkbox"
-                            checked={plan.show_in_landing || false}
-                            onChange={() => handleToggleLanding(plan)}
-                          />
-                        </CheckboxLabel>
-                      </Td>
-                      <Td>
-                        <Button $bg="#339af0" onClick={() => setEditPlan(plan)} style={{ padding: "8px 12px" }}>
-                          Editar
-                        </Button>
-                        <Button $bg="#ff6b6b" $marginRight="0" onClick={() => handleDeletePlan(plan)} style={{ padding: "8px 12px" }}>
-                          Eliminar
-                        </Button>
+                        <Button $bg="#339af0" onClick={() => setEditPlan(plan)}>Editar</Button>
+                        <Button $bg="#ff6b6b" onClick={() => handleDeletePlan(plan)}>Eliminar</Button>
                       </Td>
                     </tr>
                   ))}
                 </tbody>
               </Table>
-            ) : (
-              <EmptyState>
-                <p>No hay planes creados todavía</p>
-              </EmptyState>
-            )}
+            ) : <EmptyState><p>No hay planes</p></EmptyState>}
           </SectionContainer>
         </>
       )}
 
-      {/* Sección Pagos */}
+      {/* SECCIÓN PAGOS */}
       {activeSection === "Pagos" && (
         <>
-          {paymentsOverdue > 0 && (
-            <AlertBox $type="danger">
-              <FaExclamationTriangle />
-              <div>
-                <h4>¡Atención! Tienes {paymentsOverdue} pago(s) vencido(s)</h4>
-                <p>Revisa la tabla y contacta a los usuarios para actualizar sus pagos.</p>
-              </div>
-            </AlertBox>
-          )}
-
+          {paymentsOverdue > 0 && <AlertBox $type="danger"><FaExclamationTriangle /><div><h4>¡{paymentsOverdue} pagos vencidos!</h4><p>Contacta a los usuarios.</p></div></AlertBox>}
+          
           <SectionContainer>
-            <h3 style={{ marginBottom: "20px", color: "#23234a" }}>
-              Estado de Pagos ({payments.length} membresías activas)
-            </h3>
+            <h3>Estado de Pagos</h3>
             {payments.length > 0 ? (
               <Table>
-                <thead>
-                  <tr>
-                    <Th>Usuario</Th>
-                    <Th>Plan Actual</Th>
-                    <Th>Precio</Th>
-                    <Th>Estado Pago</Th>
-                    <Th>Último Pago</Th>
-                    <Th>Próximo Pago</Th>
-                    <Th>Acciones</Th>
-                  </tr>
-                </thead>
+                <thead><tr><Th>Usuario</Th><Th>Plan</Th><Th>Precio</Th><Th>Estado</Th><Th>Vencimiento</Th><Th>Acciones</Th></tr></thead>
                 <tbody>
-                  {payments.map(payment => (
-                    <tr key={payment.id}>
+                  {payments.map(p => (
+                    <tr key={p.id}>
+                      <Td><strong>{p.user_name}</strong><br/><small>@{p.username}</small></Td>
+                      <Td>{p.plan_name} {p.next_plan_name && <small>(Cambio a {p.next_plan_name})</small>}</Td>
+                      <Td>S/ {p.plan_price}</Td>
+                      <Td><StatusBadge $status={p.payment_status}>{p.payment_status}</StatusBadge></Td>
+                      <Td style={{ color: p.payment_status === "Vencido" ? "red" : "inherit" }}>{p.next_payment_date}</Td>
                       <Td>
-                        <div style={{fontWeight: "600"}}>{payment.user_name}</div>
-                        <div style={{ color: "#868e96", fontSize: "0.85rem" }}>@{payment.username}</div>
-                      </Td>
-                      <Td>
-                        {payment.plan_name}
-                        {payment.next_plan_name && (
-                          <div style={{marginTop: "5px"}}>
-                             <PlanChangeInfo>
-                                <FaExchangeAlt size={10} />
-                                Próx: {payment.next_plan_name}
-                             </PlanChangeInfo>
-                          </div>
-                        )}
-                      </Td>
-                      <Td style={{ fontWeight: "bold" }}>S/ {payment.plan_price}</Td>
-                      <Td>
-                        <StatusBadge $status={payment.payment_status}>
-                          {payment.payment_status}
-                        </StatusBadge>
-                      </Td>
-                      <Td>{payment.last_payment_date || "—"}</Td>
-                      <Td style={{ fontWeight: "600", color: payment.payment_status === "Vencido" ? "#fa5252" : "inherit" }}>
-                          {payment.next_payment_date || "—"}
-                      </Td>
-                      <Td>
-                        <div style={{display: "flex", gap: "5px"}}>
-                        {payment.payment_status === "Vencido" || payment.payment_status === "Por vencer" ? (
-                          <>
-                            <Button
-                              $bg="#25D366"
-                              onClick={() => sendWhatsAppReminder(payment)}
-                              title="Enviar recordatorio por WhatsApp"
-                              style={{ padding: "8px 12px" }}
-                            >
-                              <FaWhatsapp />
-                            </Button>
-                            {payment.payment_status === "Vencido" && (
-                              <Button
-                                $bg="#ff6b6b"
-                                onClick={() => handleDeactivate(payment.user_id)}
-                                title="Desactivar membresía"
-                                style={{ padding: "8px 12px" }}
-                              >
-                                <FaTimes />
-                              </Button>
-                            )}
-                          </>
-                        ) : null}
-                        <Button
-                          $bg="#339af0"
-                          $marginRight="0"
-                          onClick={() => handleRegisterPayment(payment)}
-                          title="Registrar pago"
-                          style={{ padding: "8px 12px" }}
-                        >
-                          <FaMoneyBillWave /> Pagar
-                        </Button>
-                        </div>
+                        {(p.payment_status === "Vencido" || p.payment_status === "Por vencer") && <Button $bg="#25D366" onClick={() => sendWhatsAppReminder(p)}><FaWhatsapp /></Button>}
+                        <Button $bg="#339af0" onClick={() => handleRegisterPayment(p)}><FaMoneyBillWave /> Pagar</Button>
                       </Td>
                     </tr>
                   ))}
                 </tbody>
               </Table>
-            ) : (
-              <EmptyState>
-                <p>No hay pagos pendientes para revisar</p>
-              </EmptyState>
-            )}
+            ) : <EmptyState><p>No hay pagos pendientes</p></EmptyState>}
           </SectionContainer>
 
-          {/* Historial de Pagos */}
           <SectionContainer>
-            <h3 style={{ marginBottom: "20px", color: "#23234a" }}>
-              Historial de Pagos ({paymentHistory.length} registros)
-            </h3>
+            <h3>Historial</h3>
             {paymentHistory.length > 0 ? (
               <Table>
-                <thead>
-                  <tr>
-                    <Th>Fecha</Th>
-                    <Th>Usuario</Th>
-                    <Th>Plan</Th>
-                    <Th>Monto</Th>
-                    <Th>Método</Th>
-                    <Th>Notas</Th>
-                  </tr>
-                </thead>
+                <thead><tr><Th>Fecha</Th><Th>Usuario</Th><Th>Plan</Th><Th>Monto</Th><Th>Método</Th></tr></thead>
                 <tbody>
-                  {paymentHistory.map(record => (
-                    <tr key={record.id}>
-                      <Td>{record.payment_date}</Td>
-                      <Td>
-                        <div style={{fontWeight: "600"}}>{record.user_name}</div>
-                      </Td>
-                      <Td>{record.plan_name}</Td>
-                      <Td style={{ fontWeight: "bold", color: "#0ca678" }}>S/ {record.amount}</Td>
-                      <Td><span style={{background: "#f1f3f5", padding: "4px 8px", borderRadius: "4px", fontSize: "0.85rem"}}>{record.payment_method}</span></Td>
-                      <Td style={{ color: "#868e96", fontStyle: "italic" }}>{record.notes || "—"}</Td>
-                    </tr>
+                  {paymentHistory.map(r => (
+                    <tr key={r.id}><Td>{r.payment_date}</Td><Td>{r.user_name}</Td><Td>{r.plan_name}</Td><Td>S/ {r.amount}</Td><Td>{r.payment_method}</Td></tr>
                   ))}
                 </tbody>
               </Table>
-            ) : (
-              <EmptyState>
-                <p>No hay historial de pagos todavía</p>
-              </EmptyState>
-            )}
+            ) : <EmptyState><p>Sin historial</p></EmptyState>}
           </SectionContainer>
         </>
       )}
 
-      {/* Modal Cerrar Sesión */}
+      {/* MODALES */}
       <ModalOverlay $show={showLogout}>
         <ModalContent>
-          <h3 style={{color: "#23234a", marginBottom: "15px"}}>¿Cerrar Sesión?</h3>
-          <p>Estás a punto de salir del panel de administración.</p>
-          <div style={{ marginTop: "25px", display: "flex", gap: "15px", justifyContent: "center" }}>
-            <Button onClick={handleLogout} style={{ minWidth: "120px", justifyContent: "center" }}>Sí, salir</Button>
-            <Button
-              $bg="#f1f3f5"
-              $marginRight="0"
-              onClick={() => setShowLogout(false)}
-              style={{ color: "#333", minWidth: "120px", justifyContent: "center" }}
-            >
-              Cancelar
-            </Button>
+          <h3>¿Cerrar Sesión?</h3>
+          <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+            <Button onClick={handleLogout}>Sí</Button>
+            <Button $bg="#ccc" style={{color: "#333"}} onClick={() => setShowLogout(false)}>No</Button>
           </div>
         </ModalContent>
       </ModalOverlay>
 
-      {/* Modal Registrar Pago */}
       <ModalOverlay $show={showPaymentModal}>
-        <ModalContent style={{ textAlign: "left", maxWidth: "500px" }}>
-          <h3 style={{ marginBottom: "25px", color: "#23234a", borderBottom: "1px solid #eee", paddingBottom: "15px" }}>
-             Registrar Nuevo Pago
-          </h3>
+        <ModalContent style={{textAlign: "left"}}>
+          <h3>Registrar Pago</h3>
           {selectedPayment && (
             <>
-              <div style={{ background: "#f8f9fa", padding: "15px", borderRadius: "10px", marginBottom: "20px" }}>
-                <p style={{ margin: "0 0 5px 0", color: "#666" }}>Usuario: <strong style={{color: "#333"}}>{selectedPayment.user_name}</strong></p>
-                <p style={{ margin: "0", color: "#666" }}>Plan: <strong style={{color: "#333"}}>{selectedPayment.plan_name}</strong></p>
-                {selectedPayment.next_plan_name && (
-                   <div style={{ marginTop: "10px", padding: "10px", background: "#fff9db", borderRadius: "6px", fontSize: "0.9rem", color: "#e67700", border: "1px solid #ffe066" }}>
-                      ⚠️ <strong>Nota:</strong> Se aplicará cambio a <u>{selectedPayment.next_plan_name}</u>
-                   </div>
-                )}
-              </div>
-
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.9rem" }}>
-                  Monto (S/)
-                </label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={paymentFormData.amount}
-                  onChange={(e) => setPaymentFormData({ ...paymentFormData, amount: e.target.value })}
-                  placeholder="0.00"
-                  style={{ width: "100%", minWidth: "auto", fontSize: "1.1rem", fontWeight: "bold" }}
-                />
-              </div>
-              <div style={{ marginBottom: "16px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.9rem" }}>
-                  Método de pago
-                </label>
-                <Select
-                  value={paymentFormData.payment_method}
-                  onChange={(e) => setPaymentFormData({ ...paymentFormData, payment_method: e.target.value })}
-                  style={{ width: "100%" }}
-                >
-                  <option value="Efectivo">Efectivo</option>
-                  <option value="Transferencia">Transferencia</option>
-                  <option value="Yape">Yape</option>
-                  <option value="Plin">Plin</option>
-                </Select>
-              </div>
-              <div style={{ marginBottom: "25px" }}>
-                <label style={{ display: "block", marginBottom: "8px", fontWeight: "600", fontSize: "0.9rem" }}>
-                  Notas (opcional)
-                </label>
-                <TextArea
-                  value={paymentFormData.notes}
-                  onChange={(e) => setPaymentFormData({ ...paymentFormData, notes: e.target.value })}
-                  placeholder="Ej: Pago adelantado..."
-                  rows={2}
-                  style={{ width: "100%", minHeight: "80px" }}
-                />
-              </div>
-              <div style={{ display: "flex", gap: "15px" }}>
-                <Button onClick={submitPayment} style={{ flex: 1, justifyContent: "center", padding: "12px" }}>
-                  Confirmar Pago
-                </Button>
-                <Button
-                  $bg="#f1f3f5"
-                  $marginRight="0"
-                  onClick={() => {
-                    setShowPaymentModal(false);
-                    setSelectedPayment(null);
-                  }}
-                  style={{ flex: 1, justifyContent: "center", color: "#333", padding: "12px" }}
-                >
-                  Cancelar
-                </Button>
+              <p>Usuario: <strong>{selectedPayment.user_name}</strong></p>
+              <label>Monto</label><Input type="number" value={paymentFormData.amount} onChange={e => setPaymentFormData({...paymentFormData, amount: e.target.value})} />
+              <br/><br/>
+              <label>Método</label>
+              <Select value={paymentFormData.payment_method} onChange={e => setPaymentFormData({...paymentFormData, payment_method: e.target.value})} style={{width: "100%"}}>
+                <option>Efectivo</option><option>Transferencia</option><option>Yape</option><option>Plin</option>
+              </Select>
+              <br/><br/>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <Button onClick={submitPayment} style={{flex: 1}}>Confirmar</Button>
+                <Button $bg="#ccc" style={{color: "#333", flex: 1}} onClick={() => setShowPaymentModal(false)}>Cancelar</Button>
               </div>
             </>
           )}
         </ModalContent>
       </ModalOverlay>
 
-      {/* Modal Editar Plan */}
-      {editPlan && (
-        <EditPlanModal
-          plan={editPlan}
-          onClose={() => {
-            setEditPlan(null);
-            fetchPlans();
-          }}
-        />
-      )}
+      {editPlan && <EditPlanModal plan={editPlan} onClose={() => { setEditPlan(null); fetchPlans(); }} />}
     </Container>
   );
 }
