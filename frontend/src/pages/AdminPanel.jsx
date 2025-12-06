@@ -850,7 +850,7 @@ export default function AdminPanel() {
 
   const sendWhatsAppReminder = (payment) => {
     const message = `Hola ${payment.user_name}, recordatorio: tu pago del plan ${payment.plan_name} está ${payment.payment_status}.`;
-    window.open(`https://wa.me/51900000000?text=${encodeURIComponent(message)}`, "_blank");
+    window.open(`https://wa.me/51972464209?text=${encodeURIComponent(message)}`, "_blank");
   };
 
   const handleLogout = () => {
