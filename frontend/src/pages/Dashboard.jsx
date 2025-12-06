@@ -191,7 +191,7 @@ export default function Dashboard() {
 
   const handlePlanClick = (plan) => {
     const message = `Hola, estoy interesado en adquirir el plan: ${plan.name} (S/ ${plan.price}). Mi usuario es: ${user.username}`;
-    window.open(`https://wa.me/51900000000?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/51972464209?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const membershipStatus = useMemo(() => {
